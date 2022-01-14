@@ -17,9 +17,13 @@ jobs:
     - name: Build the Docker image
     # docker build . --file Dockerfile --tag my-image-name:$IMAGE_TAG
       run: |
+        echo "------"
         echo $GITHUB_ENV
-        export IMAGE_TAG = "$GITHUB_RUN_ID$(date '+%H%M%S')-$GITHUB_REF_NAME"
+        echo "------"
+        export IMAGE_TAG="$GITHUB_RUN_ID$(date '+%H%M%S')-$GITHUB_REF_NAME"
+        echo "------"
         echo $IMAGE_TAG
+        echo "------"
         echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
     - name: Testing persisted variables
       run: |
