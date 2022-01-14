@@ -18,6 +18,9 @@ jobs:
       run: |
         docker build . --file Dockerfile --tag my-image-name:$(date +%s)
         export NEWVAR=valor1
+        export DB_HOST="asdasdasa"
+        echo $NEWVAR
+        echo $DB_HOST
         echo $GITHUB_RUN_ID
         echo $GITHUB_RUN_NUMBER
         echo $GITHUB_REF
@@ -25,4 +28,6 @@ jobs:
     - name: Test if values are persisted across steps
       run: |
         echo $NEWVAR
+        echo $DB_HOST
         docker image ls
+        echo $GITHUB_RUN_ID
