@@ -17,7 +17,12 @@ jobs:
     - name: Build the Docker image
       run: |
         docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+        export NEWVAR=valor1
         echo $GITHUB_RUN_ID
         echo $GITHUB_RUN_NUMBER
         echo $GITHUB_REF
         echo $GITHUB_REF_NAME
+    - name: Test if values are persisted across steps
+      run: |
+        echo $NEWVAR
+        docker image ls
