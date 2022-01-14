@@ -15,26 +15,16 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
-    # docker build . --file Dockerfile --tag my-image-name:$IMAGE_TAG
       run: |
-        echo "------"
-        echo $GITHUB_ENV
-        echo "------"
         export IMAGE_TAG="$GITHUB_RUN_ID$(date '+%H%M%S')-$GITHUB_REF_NAME"
-        echo "------"
-        echo $IMAGE_TAG
-        echo "------"
+        docker build . --file Dockerfile --tag ${{ secrets.IMAGE_NAME }}:$IMAGE_TAG
         echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
-    - name: Testing persisted variables
-      run: |
-        echo $GITHUB_ENV
-        echo $IMAGE_TAG
-    # - name: Run Trivy vulnerability scanner
-    #   uses: aquasecurity/trivy-action@master
-    #   with:
-    #     image-ref: 'docker.io/my-organization/my-app:${{ github.sha }}'
-    #     format: 'table'
-    #     exit-code: '1'
-    #     ignore-unfixed: true
-    #     vuln-type: 'os,library'
-    #     severity: 'CRITICAL,HIGH'
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        image-ref: ${{ secrets.IMAGE_NAME }}:$IMAGE_TAG
+        format: 'table'
+        exit-code: '1'
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'CRITICAL,HIGH,MEDIUM,LOW,INFO'
