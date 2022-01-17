@@ -35,3 +35,13 @@ jobs:
       uses: github/codeql-action/upload-sarif@v1
       with:
         sarif_file: 'trivy-results.sarif'
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        role-to-assume: arn:aws:iam::553978640171:role/GitHubActions-ECRPush
+        aws-region: ca-central-1
+    - name: Test AWS Integration
+      run: |
+        apt update
+        apt install awscli
+        aws s3 ls
