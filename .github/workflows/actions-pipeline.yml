@@ -58,7 +58,6 @@ jobs:
         role-to-assume: arn:aws:iam::553978640171:role/GitHubActions-ECRPush
         aws-region: ca-central-1
     - name: Test AWS Integration
+      uses: chrislennon/action-aws-cli@v1.1
       run: |
-        apt update
-        apt install awscli
         aws s3 ls
