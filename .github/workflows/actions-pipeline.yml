@@ -10,9 +10,9 @@ jobs:
 
   build:
 
-    permissions: write-all
-      # id-token: write
-      # contents: read
+    # permissions:
+    #   id-token: write
+    #   contents: read
       # actions: read|write|none
       # checks: read|write|none
       # deployments: read|write|none
@@ -25,7 +25,9 @@ jobs:
       # security-events: read|write|none
       # statuses: write
 
-
+# Set-up the following SECRETS:
+# - IMAGE_NAME
+# - ECR_REGISTRY
 
     runs-on: ubuntu-latest
 
@@ -38,21 +40,21 @@ jobs:
         docker build . --file Dockerfile --tag ${{ secrets.IMAGE_NAME }}:$GITHUB_REF_NAME
         docker build . --file Dockerfile --tag 553978640171.dkr.ecr.ca-central-1.amazonaws.com/labapp:$IMAGE_TAG
         echo "IMAGE_TAG=$IMAGE_TAG" >> $GITHUB_ENV
-    # - name: Run Trivy vulnerability scanner
-    #   uses: aquasecurity/trivy-action@2a2157eb22c08c9a1fac99263430307b8d1bc7a2
-    #   with:
-    #     image-ref: ${{ secrets.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
-    #     format: 'template'
-    #     template: '@/contrib/sarif.tpl'
-    #     output: 'trivy-results.sarif'
-    #     exit-code: '1'
-    #     ignore-unfixed: true
-    #     vuln-type: 'os,library'
-    #     severity: 'CRITICAL,HIGH,MEDIUM'
-    # - name: Upload Trivy scan results to GitHub Security tab
-    #   uses: github/codeql-action/upload-sarif@v1
-    #   with:
-    #     sarif_file: 'trivy-results.sarif'
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@2a2157eb22c08c9a1fac99263430307b8d1bc7a2
+      with:
+        image-ref: ${{ secrets.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+        format: 'template'
+        template: '@/contrib/sarif.tpl'
+        output: 'trivy-results.sarif'
+        exit-code: '1'
+        ignore-unfixed: true
+        vuln-type: 'os,library'
+        severity: 'CRITICAL,HIGH,MEDIUM'
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v1
+      with:
+        sarif_file: 'trivy-results.sarif'
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
@@ -61,7 +63,7 @@ jobs:
     - name: Push Image to ECR
       env:
         ECR_REGISTRY: 553978640171.dkr.ecr.ca-central-1.amazonaws.com
-        ECR_REPOSITORY: labapp
+        ECR_REPOSITORY: ${{ secrets.IMAGE_NAME }}
         IMAGE_TAG: ${{ env.IMAGE_TAG }}
       run: |
         aws ecr get-login-password --region ca-central-1 | docker login --username AWS --password-stdin 553978640171.dkr.ecr.ca-central-1.amazonaws.com
