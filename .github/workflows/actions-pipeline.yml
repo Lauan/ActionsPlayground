@@ -64,4 +64,5 @@ jobs:
         ECR_REPOSITORY: labapp
         IMAGE_TAG: ${{ env.IMAGE_TAG }}
       run: |
+        aws ecr get-login-password --region ca-central-1 | docker login --username AWS --password-stdin 553978640171.dkr.ecr.ca-central-1.amazonaws.com
         docker push 553978640171.dkr.ecr.ca-central-1.amazonaws.com/labapp:$IMAGE_TAG
