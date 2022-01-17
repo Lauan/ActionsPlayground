@@ -58,6 +58,8 @@ jobs:
         role-to-assume: arn:aws:iam::553978640171:role/GitHubActions-ECRPush
         aws-region: ca-central-1
     - name: Test AWS Integration
-      uses: chrislennon/action-aws-cli@v1.1
-    - run: |
-        aws s3 ls
+      uses: ItsKarma/aws-cli@v1.70.0
+      with:
+        args: s3 ls
+      env:
+        AWS_DEFAULT_REGION: "ca-central-1"
