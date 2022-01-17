@@ -10,9 +10,9 @@ jobs:
 
   build:
 
-    permissions:
-      id-token: write
-      contents: read
+    permissions: write-all
+      # id-token: write
+      # contents: read
       # actions: read|write|none
       # checks: read|write|none
       # deployments: read|write|none
@@ -23,7 +23,7 @@ jobs:
       # pull-requests: read|write|none
       # repository-projects: read|write|none
       # security-events: read|write|none
-      statuses: write
+      # statuses: write
 
 
 
