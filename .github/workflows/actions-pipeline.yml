@@ -10,8 +10,8 @@ jobs:
 
   build:
 
-    # permissions:
-    #   id-token: write
+    permissions:
+      id-token: write
     #   contents: read
       # actions: read|write|none
       # checks: read|write|none
